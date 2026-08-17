@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convite para o {{ project_name }}</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #050508;
+            margin: 0;
+            padding: 0;
+            color: #F0F2F8;
+        }
+
+        .container {
+            max-width: 560px;
+            margin: 32px auto;
+            background-color: #0D0C14;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(124, 58, 237, 0.15);
+            border: 1px solid #1C1929;
+        }
+
+        .header {
+            text-align: center;
+            padding-bottom: 28px;
+            border-bottom: 1px solid #1C1929;
+        }
+
+        .logo {
+            max-width: 110px;
+            height: auto;
+        }
+
+        .content {
+            padding: 28px 0;
+            line-height: 1.7;
+            color: #C4C3D0;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #7C3AED, #A855F7);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: bold;
+            margin-top: 20px;
+            letter-spacing: 0.5px;
+            font-size: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            padding-top: 28px;
+            border-top: 1px solid #1C1929;
+            font-size: 12px;
+            color: #4A4860;
+        }
+
+        h1 {
+            color: #F0F2F8;
+            margin: 18px 0 0;
+            font-size: 22px;
+        }
+
+        p {
+            margin-bottom: 14px;
+        }
+
+        .highlight {
+            color: #7C3AED;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                padding: 28px 20px;
+                border-left: none;
+                border-right: none;
+            }
+
+            .logo {
+                max-width: 80px;
+            }
+
+            .button {
+                display: block;
+                text-align: center;
+                padding: 14px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://pulsofit.app/logo.png" alt="{{ project_name }}" class="logo">
+            <h1>Você foi convidado!</h1>
+        </div>
+        <div class="content">
+            <p>Olá,</p>
+            <p>Você recebeu um convite especial para se juntar ao <span class="highlight">{{ project_name }}</span>.</p>
+
+            {% if trainer_name %}
+            <p>O treinador <strong style="color: #F0F2F8;">{{ trainer_name }}</strong> convidou você para fazer parte do time.</p>
+            {% endif %}
+
+            <p>Clique no botão abaixo para aceitar o convite e criar sua conta:</p>
+
+            <div style="text-align: center; margin-top: 28px;">
+                <a href="{{ invite_link }}" class="button">Aceitar Convite</a>
+            </div>
+
+            <p style="margin-top: 28px; font-size: 12px; color: #4A4860;">
+                Se o botão não funcionar, copie e cole este link no seu navegador:<br>
+                <a href="{{ invite_link }}" style="color: #7C3AED;">{{ invite_link }}</a>
+            </p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 {{ project_name }}. Todos os direitos reservados.</p>
+            <p>Se você não esperava este convite, por favor ignore este email.</p>
+        </div>
+    </div>
+</body>
+
+</html>

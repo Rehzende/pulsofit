@@ -1,0 +1,89 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - "http://localhost:3000"
+            - "http://localhost:8000"
+            - "http://localhost:*"
+            - "http://127.0.0.1:*"
+
+processors:
+  batch:
+    timeout: 1s
+    send_batch_size: 1024
+
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 256
+    spike_limit_mib: 64
+
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: "local"
+        action: insert
+
+exporters:
+  # Export traces to Jaeger via OTLP gRPC (native OTLP port 4317)
+  otlp/jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+
+  # Prometheus exporter — serves span metrics for Jaeger SPM + general metrics
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    enable_open_metrics: true
+    resource_to_telemetry_conversion:
+      enabled: true
+
+  # Debug logging
+  debug:
+    verbosity: normal
+
+# ── Spanmetrics Connector ───────────────────────────────────────────────────
+# Converts incoming trace spans into RED metrics (rate/error/duration)
+# that are exposed via the prometheus exporter and read by Jaeger SPM.
+connectors:
+  spanmetrics:
+    namespace: traces_spanmetrics
+    histogram:
+      explicit:
+        buckets: [2ms, 4ms, 6ms, 8ms, 10ms, 50ms, 100ms, 200ms, 400ms, 800ms, 1s, 1400ms, 2s, 5s, 10s, 15s]
+    dimensions:
+      - name: http.method
+      - name: http.status_code
+      - name: http.route
+    exemplars:
+      enabled: true
+    dimensions_cache_size: 1000
+    aggregation_temporality: "AGGREGATION_TEMPORALITY_CUMULATIVE"
+    metrics_flush_interval: 15s
+
+service:
+  telemetry:
+    logs:
+      level: warn
+
+  pipelines:
+    # Traces: receive → process → send to Jaeger AND into spanmetrics connector
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, batch]
+      exporters: [otlp/jaeger, spanmetrics]
+
+    # Metrics: receive from OTLP + spanmetrics connector → export to Prometheus
+    metrics:
+      receivers: [otlp, spanmetrics]
+      processors: [memory_limiter, resource, batch]
+      exporters: [prometheus, debug]
+
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, batch]
+      exporters: [debug]

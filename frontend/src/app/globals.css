@@ -1,0 +1,308 @@
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* ============================================
+   * PULSO — Design System v2.0
+   * Identity: Tech Premium Fitness
+   * Primary: Violet/Purple  |  Accent: Cyan
+   * ============================================ */
+
+  --background: 248 15% 3%;
+  /* #050508 — Deep Space */
+  --foreground: 220 20% 96%;
+  /* #F0F2F8 — Ice White */
+
+  --card: 246 14% 7%;
+  /* #0D0C14 — Dark Card */
+  --card-foreground: 220 20% 96%;
+
+  --popover: 246 14% 7%;
+  --popover-foreground: 220 20% 96%;
+
+  --primary: 266 70% 55%;
+  /* #7C3AED — Violet */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 248 15% 12%;
+  /* #161320 — Muted bg */
+  --secondary-foreground: 220 20% 80%;
+
+  --muted: 248 12% 11%;
+  --muted-foreground: 220 12% 45%;
+
+  --accent: 188 85% 43%;
+  /* #06B6D4 — Cyan (IoT accent) */
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 248 12% 13%;
+  --input: 248 14% 10%;
+  --ring: 266 70% 55%;
+
+  --radius: 0.75rem;
+
+  /* Chart Colors */
+  --chart-1: 266 70% 55%;
+  --chart-2: 188 85% 43%;
+  --chart-3: 316 72% 60%;
+  --chart-4: 38 92% 50%;
+  --chart-5: 142 71% 45%;
+
+  /* Sidebar */
+  --sidebar: 248 15% 5%;
+  --sidebar-foreground: 220 20% 85%;
+  --sidebar-primary: 266 70% 55%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 248 14% 10%;
+  --sidebar-accent-foreground: 220 20% 85%;
+  --sidebar-border: 248 12% 11%;
+  --sidebar-ring: 266 70% 55%;
+}
+
+.dark {
+  --background: 248 15% 3%;
+  --foreground: 220 20% 96%;
+
+  --card: 246 14% 7%;
+  --card-foreground: 220 20% 96%;
+
+  --popover: 246 14% 7%;
+  --popover-foreground: 220 20% 96%;
+
+  --primary: 266 70% 55%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 248 15% 12%;
+  --secondary-foreground: 220 20% 80%;
+
+  --muted: 248 12% 11%;
+  --muted-foreground: 220 12% 45%;
+
+  --accent: 188 85% 43%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 248 12% 13%;
+  --input: 248 14% 10%;
+  --ring: 266 70% 55%;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Direct color values (Tailwind v4 needs resolved values, not HSL-only vars) */
+  --color-background: #050508;
+  --color-foreground: #F0F2F8;
+  --color-card: #0D0C14;
+  --color-card-foreground: #F0F2F8;
+  --color-popover: #0D0C14;
+  --color-popover-foreground: #F0F2F8;
+  --color-primary: #7C3AED;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #161320;
+  --color-secondary-foreground: #D0D3E0;
+  --color-muted: #131120;
+  --color-muted-foreground: #6B6A7A;
+  --color-accent: #06B6D4;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #EF4444;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #1C1929;
+  --color-input: #0F0D1A;
+  --color-ring: #7C3AED;
+  --color-sidebar: #0A0910;
+  --color-sidebar-foreground: #F0F2F8;
+  --color-sidebar-primary: #7C3AED;
+  --color-sidebar-primary-foreground: #ffffff;
+  --color-sidebar-accent: #161320;
+  --color-sidebar-accent-foreground: #F0F2F8;
+  --color-sidebar-border: #1C1929;
+  --color-sidebar-ring: #7C3AED;
+}
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: #050508;
+    overflow-x: hidden;
+  }
+
+  body {
+    background-color: #050508;
+    color: hsl(220, 20%, 96%);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, hsla(266, 70%, 55%, 0.08), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 90%, hsla(188, 85%, 43%, 0.05), transparent);
+    overflow-x: hidden;
+  }
+}
+
+/* ========================
+ * Browser Autofill Override
+ * Prevents Chrome blue fill on pre-filled inputs
+ * ======================== */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 40px #0A0910 inset !important;
+  -webkit-text-fill-color: #F0F2F8 !important;
+  caret-color: #7C3AED !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+@layer utilities {
+
+
+  /* ========================
+   * PULSO — Glow Effects
+   * ======================== */
+  .glow-primary {
+    box-shadow: 0 0 20px hsla(266, 70%, 55%, 0.35), 0 0 60px hsla(266, 70%, 55%, 0.15);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 20px hsla(188, 85%, 43%, 0.35), 0 0 60px hsla(188, 85%, 43%, 0.15);
+  }
+
+  .glow-primary-sm {
+    box-shadow: 0 0 10px hsla(266, 70%, 55%, 0.4), 0 0 25px hsla(266, 70%, 55%, 0.2);
+  }
+
+  /* ========================
+   * Gradient Text
+   * ======================== */
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(266, 70%, 70%) 0%, hsl(316, 72%, 70%) 50%, hsl(188, 85%, 60%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-primary {
+    background: linear-gradient(135deg, hsl(266, 70%, 65%) 0%, hsl(285, 65%, 60%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ========================
+   * Card Variants
+   * ======================== */
+  .card-glass {
+    background: linear-gradient(135deg, hsla(246, 14%, 9%, 0.8), hsla(248, 15%, 6%, 0.6));
+    backdrop-filter: blur(20px);
+    border: 1px solid hsla(266, 70%, 55%, 0.1);
+  }
+
+  .card-glow {
+    background: linear-gradient(145deg, #0D0C14, #0A0910);
+    border: 1px solid hsla(266, 70%, 55%, 0.15);
+    box-shadow: 0 0 40px hsla(266, 70%, 55%, 0.05), inset 0 1px 0 hsla(266, 70%, 55%, 0.1);
+  }
+
+
+  /* ========================
+   * Utility
+   * ======================== */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .text-gradient-accent {
+    background: linear-gradient(90deg, hsl(188, 85%, 55%) 0%, hsl(210, 80%, 65%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* ========================
+ * Animations
+ * ======================== */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px hsla(266, 70%, 55%, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 25px hsla(266, 70%, 55%, 0.8), 0 0 50px hsla(266, 70%, 55%, 0.3);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, hsla(266, 70%, 70%, 0.1) 50%, transparent 100%);
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}

@@ -1,0 +1,84 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <title>Main Muscle Groups of a Woman (Front and Back Views)</title>
+  <desc>A 2D vector illustration of main muscle groups on a woman, with each group on its own layer for easy browser identification.</desc>
+
+  <style>
+    .body-outline { fill: none; stroke: #ccc; stroke-width: 2; }
+    .label { font-family: sans-serif; font-size: 16px; font-weight: bold; fill: #333; text-anchor: middle; }
+    .muscle-group { opacity: 0.8; transition: opacity 0.3s; }
+    .muscle-group:hover { opacity: 1.0; cursor: pointer; stroke: #000; stroke-width: 1; }
+
+    /* Color coding for muscle groups */
+    .pectorals { fill: #e74c3c; }
+    .back-muscles { fill: #3498db; }
+    .biceps { fill: #f1c40f; }
+    .triceps { fill: #9b59b6; }
+    .forearm { fill: #2ecc71; }
+    .waist { fill: #e67e22; }
+    .gluteus { fill: #d35400; }
+    .legs { fill: #1abc9c; }
+    .calves { fill: #34495e; }
+  </style>
+
+  <g id="front-view" transform="translate(50, 50)">
+    <text x="150" y="-20" class="label">Front View</text>
+    <path d="M150 20 C 120 20, 100 60, 100 100 C 100 150, 110 180, 100 220 C 80 250, 70 350, 80 450 L 100 500 L 200 500 L 220 450 C 230 350, 220 250, 200 220 C 190 180, 200 150, 200 100 C 200 60, 180 20, 150 20 Z" class="body-outline" />
+    <path d="M100 100 L 50 150 L 40 250 L 60 270 L 80 250 L 110 180" class="body-outline" />
+    <path d="M200 100 L 250 150 L 260 250 L 240 270 L 220 250 L 190 180" class="body-outline" />
+
+    <g id="front-pectorals" class="muscle-group pectorals">
+      <title>Pectorals</title>
+      <path d="M120 80 C 140 80, 160 80, 180 80 C 190 100, 190 120, 180 130 C 160 140, 140 140, 120 130 C 110 120, 110 100, 120 80 Z" />
+    </g>
+    <g id="front-biceps" class="muscle-group biceps">
+      <title>Biceps</title>
+      <path d="M80 130 C 70 150, 65 180, 70 200 C 85 200, 95 180, 100 150 Z" transform="translate(-10, 10)"/>
+      <path d="M220 130 C 230 150, 235 180, 230 200 C 215 200, 205 180, 200 150 Z" transform="translate(10, 10)"/>
+    </g>
+    <g id="front-forearm" class="muscle-group forearm">
+      <title>Forearm</title>
+      <path d="M60 200 C 55 220, 50 240, 55 260 L 75 250 C 80 230, 85 210, 80 200 Z" transform="translate(-5, 10)"/>
+      <path d="M240 200 C 245 220, 250 240, 245 260 L 225 250 C 220 230, 215 210, 220 200 Z" transform="translate(5, 10)"/>
+    </g>
+    <g id="front-waist" class="muscle-group waist">
+      <title>Waist (Abdominals)</title>
+      <path d="M130 150 C 150 150, 150 150, 170 150 C 180 180, 180 210, 170 230 C 150 235, 150 235, 130 230 C 120 210, 120 180, 130 150 Z" />
+    </g>
+    <g id="front-legs-quadriceps" class="muscle-group legs">
+      <title>Legs (Quadriceps)</title>
+      <path d="M110 240 C 100 280, 95 350, 105 400 C 125 400, 135 350, 140 280 C 130 260, 120 250, 110 240 Z" />
+      <path d="M190 240 C 200 280, 205 350, 195 400 C 175 400, 165 350, 160 280 C 170 260, 180 250, 190 240 Z" />
+    </g>
+  </g>
+
+  <g id="back-view" transform="translate(450, 50)">
+    <text x="150" y="-20" class="label">Back View</text>
+    <path d="M150 20 C 120 20, 100 60, 100 100 C 100 150, 110 180, 100 220 C 80 250, 70 350, 80 450 L 100 500 L 200 500 L 220 450 C 230 350, 220 250, 200 220 C 190 180, 200 150, 200 100 C 200 60, 180 20, 150 20 Z" class="body-outline" />
+    <path d="M100 100 L 50 150 L 40 250 L 60 270 L 80 250 L 110 180" class="body-outline" />
+    <path d="M200 100 L 250 150 L 260 250 L 240 270 L 220 250 L 190 180" class="body-outline" />
+
+    <g id="back-back-muscles" class="muscle-group back-muscles">
+      <title>Back</title>
+      <path d="M120 60 L 180 60 C 195 80, 200 120, 190 160 C 170 180, 130 180, 110 160 C 100 120, 105 80, 120 60 Z" />
+    </g>
+    <g id="back-triceps" class="muscle-group triceps">
+      <title>Triceps</title>
+      <path d="M80 130 C 90 150, 95 180, 90 200 C 75 200, 65 180, 60 150 Z" transform="translate(-10, 10)"/>
+      <path d="M220 130 C 210 150, 205 180, 210 200 C 225 200, 235 180, 240 150 Z" transform="translate(10, 10)"/>
+    </g>
+    <g id="back-gluteus" class="muscle-group gluteus">
+      <title>Gluteus</title>
+      <path d="M110 220 C 100 240, 100 270, 120 280 C 140 285, 160 285, 180 280 C 200 270, 200 240, 190 220 C 170 230, 130 230, 110 220 Z" />
+    </g>
+    <g id="back-legs-hamstrings" class="muscle-group legs">
+      <title>Legs (Hamstrings)</title>
+      <path d="M110 290 C 100 320, 95 370, 105 400 C 125 400, 135 370, 140 320 C 130 300, 120 295, 110 290 Z" />
+      <path d="M190 290 C 200 320, 205 370, 195 400 C 175 400, 165 370, 160 320 C 170 300, 180 295, 190 290 Z" />
+    </g>
+    <g id="back-calves" class="muscle-group calves">
+      <title>Calves</title>
+      <path d="M105 410 C 100 430, 100 460, 110 480 C 120 480, 130 460, 135 430 C 130 415, 115 415, 105 410 Z" />
+      <path d="M195 410 C 200 430, 200 460, 190 480 C 180 480, 170 460, 165 430 C 170 415, 185 415, 195 410 Z" />
+    </g>
+  </g>
+</svg>

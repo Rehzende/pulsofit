@@ -1,0 +1,12 @@
+# Ignore everything except the frontend
+backend/
+mobile_app/
+venv_new/
+venv/
+.env
+*.log
+__pycache__/
+*.pyc
+*.pyo
+.git/
+node_modules/

@@ -1,0 +1,76 @@
+# Virtual environments
+venv/
+venv_new/
+temp_venv/
+.venv/
+backend/venv/
+
+# Python packages / local libs
+local_libs/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+
+# Node dependencies & build cache
+frontend/node_modules/
+frontend/tsconfig.tsbuildinfo
+
+# Flutter/Dart build artifacts
+mobile_app/build/
+mobile_app/android/
+mobile_app/ios/
+mobile_app/linux/
+mobile_app/macos/
+mobile_app/windows/
+mobile_app/web/
+mobile_app/.dart_tool/
+
+# Large data files
+exercises_pt.json
+minified-exercises.json
+minified-exercises-pt-br.json
+*.apk
+
+# SQL dump/seed files
+*.sql
+backend/insert_exercises*.sql
+backend/upsert_exercises.sql
+
+# Log files
+*.log
+backend/server.log
+backend/server_debug.log
+backend/server_manual.log
+
+# PDF documents
+*.pdf
+
+# IDE / editor
+.idea/
+**/.DS_Store
+
+# Git internals
+.git/
+
+# Vercel
+.vercel/
+
+# Alembic migration versions (keep alembic.ini and env.py)
+backend/alembic/versions/
+
+# One-off debug/check/verify scripts in backend
+backend/check_*.py
+backend/debug_*.py
+backend/verify_*.py
+backend/fix_*.py
+backend/test_*.py
+backend/generate_*.py
+backend/translate_exercises.py
+backend/import_exercises.py
+backend/seed_plans.py
+backend/reset_*.py
+backend/get_token.py
+backend/get_prod_token.py
+backend/simulate_trainer.py
+backend/setup_test_users.py
+backend/create_admin.py

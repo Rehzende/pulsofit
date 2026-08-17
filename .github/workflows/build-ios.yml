@@ -1,0 +1,189 @@
+name: Build iOS (DISABLED)
+
+on:
+  # ❌ Desabilitado por enquanto — apenas Android em uso
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'mobile_app/**'
+  workflow_dispatch:
+    inputs:
+      distribution_method:
+        description: 'Distribution method'
+        required: true
+        default: 'build-only'
+        type: choice
+        options:
+          - build-only
+          - firebase-distribution
+
+jobs:
+  build-ios:
+    name: Build iOS App
+    runs-on: macos-latest
+    steps:
+      # ── Checkout ────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      # ── Flutter ─────────────────────────────────────────
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.6'
+          channel: stable
+          cache: true
+
+      # ── CocoaPods ────────────────────────────────────────
+      - name: Setup CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod repo update
+
+      # ── Firebase config ─────────────────────────────────
+      - name: Restore firebase_options.dart
+        run: |
+          cat > mobile_app/lib/firebase_options.dart << 'EOF'
+          ${{ secrets.FIREBASE_OPTIONS_DART }}
+          EOF
+
+      - name: Restore GoogleService-Info.plist
+        run: |
+          mkdir -p mobile_app/ios/Runner
+          cat > mobile_app/ios/Runner/GoogleService-Info.plist << 'EOF'
+          ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
+          EOF
+
+      # ── Version Bumping ──────────────────────────────────
+      - name: Determine version bump (semantic versioning)
+        id: version
+        run: |
+          # Get current version from pubspec.yaml
+          current=$(grep "^version:" mobile_app/pubspec.yaml | sed 's/version: //' | cut -d'+' -f1)
+          IFS='.' read -r major minor patch <<< "$current"
+
+          # Get last tag or use first commit
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          # Analyze commits since last tag
+          if [ -z "$last_tag" ]; then
+            commits=$(git log --oneline)
+          else
+            commits=$(git log ${last_tag}..HEAD --oneline)
+          fi
+
+          # Determine bump type (BREAKING > feat > fix)
+          has_breaking=$(echo "$commits" | grep -E "^[a-f0-9]+ (BREAKING|feat!|chore!)" | wc -l)
+          has_feature=$(echo "$commits" | grep -E "^[a-f0-9]+ feat:" | wc -l)
+          has_fix=$(echo "$commits" | grep -E "^[a-f0-9]+ fix:" | wc -l)
+
+          # Calculate new version
+          if [ "$has_breaking" -gt 0 ]; then
+            major=$((major + 1))
+            minor=0
+            patch=0
+            bump_type="MAJOR"
+          elif [ "$has_feature" -gt 0 ]; then
+            minor=$((minor + 1))
+            patch=0
+            bump_type="MINOR"
+          elif [ "$has_fix" -gt 0 ]; then
+            patch=$((patch + 1))
+            bump_type="PATCH"
+          else
+            patch=$((patch + 1))
+            bump_type="PATCH (no conventional commits)"
+          fi
+
+          new_version="${major}.${minor}.${patch}"
+
+          # Increment build number
+          current_build=$(grep "^version:" mobile_app/pubspec.yaml | cut -d'+' -f2)
+          new_build=$((current_build + 1))
+
+          new_version_full="${new_version}+${new_build}"
+
+          echo "Current version: ${current}+${current_build}"
+          echo "New version: ${new_version_full} (bump: ${bump_type})"
+          echo "new_version=${new_version_full}" >> $GITHUB_OUTPUT
+          echo "bump_type=${bump_type}" >> $GITHUB_OUTPUT
+
+      - name: Update pubspec.yaml with new version
+        run: |
+          sed -i '' "s/^version:.*/version: ${{ steps.version.outputs.new_version }}/" mobile_app/pubspec.yaml
+          echo "Updated pubspec.yaml to version: ${{ steps.version.outputs.new_version }}"
+
+      - name: Commit and push version bump
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add mobile_app/pubspec.yaml
+          git commit -m "chore: bump iOS version to ${{ steps.version.outputs.new_version }} (${{ steps.version.outputs.bump_type }}) [skip ci]" || echo "No changes to commit"
+          git push origin main
+
+      - name: Create git tag
+        run: |
+          git tag -a "ios-v${{ steps.version.outputs.new_version }}" -m "iOS Release ${{ steps.version.outputs.new_version }}"
+          git push origin "ios-v${{ steps.version.outputs.new_version }}"
+
+      # ── Build ────────────────────────────────────────────
+      - name: Clean Flutter cache
+        working-directory: mobile_app
+        run: flutter clean
+
+      - name: Repair pub cache
+        run: flutter pub cache repair
+
+      - name: Flutter pub get
+        working-directory: mobile_app
+        run: flutter pub get --no-precompile
+
+      - name: Build iOS (development)
+        working-directory: mobile_app
+        run: |
+          flutter build ios \
+            --release \
+            --no-codesign
+
+      # ── Create IPA (without code signing) ────────────────
+      - name: Create unsigned IPA
+        run: |
+          cd mobile_app/build/ios/Release-iphoneos
+          mkdir -p Payload
+          cp -r Runner.app Payload/
+          zip -r app-unsigned.ipa Payload
+          ls -lh app-unsigned.ipa
+
+      - name: Upload IPA as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-app-${{ steps.version.outputs.new_version }}
+          path: mobile_app/build/ios/Release-iphoneos/app-unsigned.ipa
+          retention-days: 30
+
+      # ── Firebase Distribution (optional) ──────────────────
+      - name: Deploy to Firebase App Distribution
+        if: ${{ github.event.inputs.distribution_method == 'firebase-distribution' || github.event_name == 'push' }}
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_DISTRIBUTION_CREDENTIALS }}
+          file: mobile_app/build/ios/Release-iphoneos/app-unsigned.ipa
+          groups: testers
+          releaseNotes: |
+            Version: ${{ steps.version.outputs.new_version }}
+            Bump Type: ${{ steps.version.outputs.bump_type }}
+            GitHub: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
+
+      # ── Summary ──────────────────────────────────────────
+      - name: Build Summary
+        run: |
+          echo "## iOS Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.version.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Bump Type:** ${{ steps.version.outputs.bump_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Artifact:** iOS app unsigned IPA" >> $GITHUB_STEP_SUMMARY
+          echo "**Flutter Version:** 3.41.6" >> $GITHUB_STEP_SUMMARY
